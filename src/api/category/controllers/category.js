@@ -141,49 +141,62 @@ module.exports = createCoreController('api::category.category',({strapi}) => ({
 
     // /*
         //query create udpata delete ORM
+
         // async findMany(ctx) {
-        //     return 3;
         //     const entries = await strapi.db.query('api::category.category').findMany({
         //         select: ['title',],
         //         orderBy: { publishedAt: 'DESC' },
+        //         offset: 1, 
+        //         limit: 2,
         //     });
-        //     let response = {code : 200, massage: "Delete Success!", data:entries}
+        //     let response = {code : 200, massage: "Success!", data:entries}
         //     return response;
         // },
 
         async findOne(entityId) {
             let data = entityId.params;
             const entry = await strapi.db.query('api::category.category').findOne({
-            select: ['title',],
-            where: { id: data.id },
+                select: ['title',],
+                where: { id: data.id },
           });
             let response = {code : 200, massage: "Success!", data:entry}
             return response;
         },
 
-        // async create(ctx) {
-        //     const entry = await strapi.db.query('api::blog.article').create({
-        //         data: {
-        //         title: 'My Article',
-        //         },
-        //     });
-        // },
+        async create(ctx) {
+            const params = ctx.request.body;
+            const currentdate = new Date();
+            const entry = await strapi.db.query('api::category.category').create({
+                data: {
+                    title: params.title,
+                    publishedAt:currentdate
+                },
+            });
+            let response = {code : 200, massage: "Success!", data:entry}
+            return response;
+        },
 
-        // async update(entityId) {
-        //     const entry = await strapi.db.query('api::blog.article').update({
-        //         where: { id: 1 },
-        //         data: {
-        //         title: 'xxx',
-        //         },
-        //     });
-        // },
+        async update(entityId) {
+            const params = entityId.request.body;
+            const entry = await strapi.db.query('api::category.category').update({
+                where: { id: params.id },
+                data: {
+                    title: params.title,
+                },
+            });
+            let response = {code : 200, massage: "Success!", data:entry}
+            return response;
+        },
 
-        // async delete(entityId) {
-        //     const entry = await strapi.db.query('api::blog.article').delete({
-        //         where: { id: 1 },
-        //     });
-        // }
+        async delete(entityId) {
+            const params = entityId.params;
+            const entry = await strapi.db.query('api::category.category').delete({
+                where: { id: params.id },
+            });
 
+            let response = {code : 200, massage: "Delete Success!"}
+            return response;
+        }
         // finish orm
     // */
 
