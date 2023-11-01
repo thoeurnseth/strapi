@@ -155,6 +155,7 @@ module.exports = createCoreController('api::category.category',({strapi}) => ({
 
         async findOne(entityId) {
             let data = entityId.params;
+            return data;
             const entry = await strapi.db.query('api::category.category').findOne({
                 select: ['title',],
                 where: { id: data.id },
