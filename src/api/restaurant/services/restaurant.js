@@ -15,7 +15,7 @@ module.exports = createCoreService('api::restaurant.restaurant',({strapi}) =>({
             });
             return restaurant;
         }catch(error){
-            handlerError('EXEPTION ERROR',error)
+            return handlerError('EXEPTION ERROR',error)
         }
     }
 }));
