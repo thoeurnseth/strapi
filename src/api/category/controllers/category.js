@@ -201,7 +201,4 @@ module.exports = createCoreController('api::category.category',({strapi}) => ({
         // finish orm
     // */
 
-
-
-
 }));
