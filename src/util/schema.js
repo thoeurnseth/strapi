@@ -20,11 +20,11 @@ const serviceID = {
 // }
 
 
-function hello(a,b){
-    return a+'======'+b;
+function createRestaurant(a,b){
+    
 }
 
 module.exports = {
-    hello,
+    createRestaurant,
     serviceID
 } 
