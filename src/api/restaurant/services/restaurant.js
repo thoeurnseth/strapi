@@ -1,7 +1,6 @@
 'use strict';
 const   {serviceID}    = require('../../../util/schema');
 const   {handlerError}   = require('../../../util/handler');
-const   {createRestaurant} = require('../../../util/schema');
 /**
  * restaurant service
  */

@@ -1,5 +1,6 @@
 const serviceID = {
     restaurant:'api::restaurant.restaurant',
+    student:'api::student.student',
 }
 
 // function getStoryteacher(){
@@ -19,12 +20,17 @@ const serviceID = {
 //     return schema
 // }
 
-
-function createRestaurant(a,b){
-    
+function getStudent(){
+    const schema = {
+        populate:{
+            classes:{fields:['title',]},
+            teacher:{fields:['title','description','sex']},
+        } 
+    }
+    return schema;
 }
 
 module.exports = {
-    createRestaurant,
-    serviceID
+    serviceID,
+    getStudent
 } 
