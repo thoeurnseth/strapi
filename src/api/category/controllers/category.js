@@ -1,8 +1,9 @@
 'use strict';
 
 const { find } = require('../../../../config/middlewares');
+const   {handlerResponse}   = require('../../../util/handler');
+const   {serviceID}    = require('../../../util/schema');
 
-// const { find } = require('../../../../config/middlewares');
 
 /**
  * category controller
@@ -153,52 +154,66 @@ module.exports = createCoreController('api::category.category',({strapi}) => ({
         //     return response;
         // },
 
-        async findOne(entityId) {
-            let data = entityId.params;
-            return data;
-            const entry = await strapi.db.query('api::category.category').findOne({
-                select: ['title',],
-                where: { id: data.id },
-          });
-            let response = {code : 200, massage: "Success!", data:entry}
-            return response;
-        },
+        // async findOne(entityId) {
+        //     let data = entityId.params;
+        //     return data;
+        //     const entry = await strapi.db.query('api::category.category').findOne({
+        //         select: ['title',],
+        //         where: { id: data.id },
+        //   });
+        //     let response = {code : 200, massage: "Success!", data:entry}
+        //     return response;
+        // },
 
-        async create(ctx) {
-            const params = ctx.request.body;
-            const currentdate = new Date();
-            const entry = await strapi.db.query('api::category.category').create({
-                data: {
-                    title: params.title,
-                    publishedAt:currentdate
-                },
-            });
-            let response = {code : 200, massage: "Success!", data:entry}
-            return response;
-        },
+        // async create(ctx) {
+        //     const params = ctx.request.body;
+        //     const currentdate = new Date();
+        //     const entry = await strapi.db.query('api::category.category').create({
+        //         data: {
+        //             title: params.title,
+        //             publishedAt:currentdate
+        //         },
+        //     });
+        //     let response = {code : 200, massage: "Success!", data:entry}
+        //     return response;
+        // },
 
-        async update(entityId) {
-            const params = entityId.request.body;
-            const entry = await strapi.db.query('api::category.category').update({
-                where: { id: params.id },
-                data: {
-                    title: params.title,
-                },
-            });
-            let response = {code : 200, massage: "Success!", data:entry}
-            return response;
-        },
+        // async update(entityId) {
+        //     const params = entityId.request.body;
+        //     const entry = await strapi.db.query('api::category.category').update({
+        //         where: { id: params.id },
+        //         data: {
+        //             title: params.title,
+        //         },
+        //     });
+        //     let response = {code : 200, massage: "Success!", data:entry}
+        //     return response;
+        // },
 
-        async delete(entityId) {
-            const params = entityId.params;
-            const entry = await strapi.db.query('api::category.category').delete({
-                where: { id: params.id },
-            });
+        // async delete(entityId) {
+        //     const params = entityId.params;
+        //     const entry = await strapi.db.query('api::category.category').delete({
+        //         where: { id: params.id },
+        //     });
 
-            let response = {code : 200, massage: "Delete Success!"}
-            return response;
-        }
+        //     let response = {code : 200, massage: "Delete Success!"}
+        //     return response;
+        // }
         // finish orm
     // */
 
+    async find(ctx){
+        const category = await strapi.service(serviceID.category).find(ctx);
+        return handlerResponse(200,category)
+    },
+
+    async create(ctx){
+        const category = await strapi.service(serviceID.category).create(ctx);
+        return handlerResponse(200,category)
+    },
+
+    async update(ctx){
+        const category = await strapi.service(serviceID.category).update(ctx);
+        return handlerResponse(200,category)
+    },
 }));

@@ -1,5 +1,6 @@
 'use strict';
-
+const   {serviceID}      = require('../../../util/schema');
+const   {handlerResponse}   = require('../../../util/handler');
 /**
  * product controller
  */
@@ -9,99 +10,99 @@ const { createCoreController } = require('@strapi/strapi').factories;
 module.exports = createCoreController('api::product.product', ({strapi}) => ({
 
     // get product
-    async find(ctx) {
+    // async find(ctx) {
 
-        const start = ctx.request.header.start; 
-        const limit = ctx.request.header.limit;
+    //     const start = ctx.request.header.start; 
+    //     const limit = ctx.request.header.limit;
 
-        try {
-            const data = await strapi.service('api::product.product').find(
-                {
-                    fields: ["id", "title","description","price","regular_price",],
-                    populate: {
-                        image: {    
-                            fields: ['id','url'],
-                        },
-                    },
-                    sort: { id: 'desc' },
+    //     try {
+    //         const data = await strapi.service('api::product.product').find(
+    //             {
+    //                 fields: ["id", "title","description","price","regular_price",],
+    //                 populate: {
+    //                     image: {    
+    //                         fields: ['id','url'],
+    //                     },
+    //                 },
+    //                 sort: { id: 'desc' },
                     
-                    pagination: {
-                        start: start,
-                        limit: limit,
-                    },
-                },
-            );
-            // let data_response = ctx.body = data;
-            let response = {code : 200, massage: "success!" ,data: data}
-            return response;
-        } catch (err) {
-            ctx.badRequest("Post report controller error", { moreDetails: err });
-        }
-    },
+    //                 pagination: {
+    //                     start: start,
+    //                     limit: limit,
+    //                 },
+    //             },
+    //         );
+    //         // let data_response = ctx.body = data;
+    //         let response = {code : 200, massage: "success!" ,data: data}
+    //         return response;
+    //     } catch (err) {
+    //         ctx.badRequest("Post report controller error", { moreDetails: err });
+    //     }
+    // },
 
     // create product
-    async create(ctx){
-        const params = ctx.request.body;
-        try{
-            let title         = params.title;
-            let description   = params.description;
-            let price         = params.price;
-            let regular_price = params.regular_price;
-            let image         = params.image;
-            let categories_id = params.categories_id;
+    // async create(ctx){
+    //     const params = ctx.request.body;
+    //     try{
+    //         let title         = params.title;
+    //         let description   = params.description;
+    //         let price         = params.price;
+    //         let regular_price = params.regular_price;
+    //         let image         = params.image;
+    //         let categories_id = params.categories_id;
 
-            const result = await strapi.service('api::product.product').create(
-                {
-                    data: {
-                        title:title,
-                        description:description,
-                        price:price,
-                        regular_price:regular_price,
-                        image:image,
-                        categories: {
-                            disconnect: [],
-                            connect:[categories_id]
-                        },
-                    }
-                }
-            );
-            let response = {code : 200, massage: "Create Success!", data: result}
-            return response;
+    //         const result = await strapi.service('api::product.product').create(
+    //             {
+    //                 data: {
+    //                     title:title,
+    //                     description:description,
+    //                     price:price,
+    //                     regular_price:regular_price,
+    //                     image:image,
+    //                     categories: {
+    //                         disconnect: [],
+    //                         connect:[categories_id]
+    //                     },
+    //                 }
+    //             }
+    //         );
+    //         let response = {code : 200, massage: "Create Success!", data: result}
+    //         return response;
             
-        }catch(err){
-            ctx.badRequest("Post report controller error", { moreDetails: err });
-        }
-    },
+    //     }catch(err){
+    //         ctx.badRequest("Post report controller error", { moreDetails: err });
+    //     }
+    // },
 
-    async update(entityId) {
+    // async update(entityId) {
         
-        const id            = entityId.request.body.id;
-        const title         = entityId.request.body.title;
-        const description   = entityId.request.body.description;
-        const price         = entityId.request.body.price;
-        const regular_price = entityId.request.body.regular_price;
+    //     const id            = entityId.request.body.id;
+    //     const title         = entityId.request.body.title;
+    //     const description   = entityId.request.body.description;
+    //     const price         = entityId.request.body.price;
+    //     const regular_price = entityId.request.body.regular_price;
 
-        try{
-            const result = await strapi.service('api::product.product').update(id, 
-                {
-                    data: {
-                        title:title,
-                        description:description,
-                        price:price,
-                        regular_price:regular_price,
-                    }
-                }
-            );
-            let response = {code : 200, massage: "Update Success!", data: result}
-            return response;
+    //     try{
+    //         const result = await strapi.service('api::product.product').update(id, 
+    //             {
+    //                 data: {
+    //                     title:title,
+    //                     description:description,
+    //                     price:price,
+    //                     regular_price:regular_price,
+    //                 }
+    //             }
+    //         );
+    //         let response = {code : 200, massage: "Update Success!", data: result}
+    //         return response;
             
-        }catch(err){
-            entityId.badRequest("Post report controller error", { moreDetails: err });
-        }
-        // const result = await super.update(entityId, params);
-    },
+    //     }catch(err){
+    //         entityId.badRequest("Post report controller error", { moreDetails: err });
+    //     }
+    //     // const result = await super.update(entityId, params);
+    // },
 
-}));
+
 
 // module.exports = {
 //     async getPost(ctx, next) {
@@ -166,3 +167,20 @@ module.exports = createCoreController('api::product.product', ({strapi}) => ({
 //         }
 //     }
 // };
+
+    async find(ctx){
+        const product = await strapi.service(serviceID.product).find(ctx);
+        return handlerResponse(200,product)
+    },
+
+    async create(ctx){
+        const product = await strapi.service(serviceID.product).create(ctx);
+        return handlerResponse(200,product)
+    },
+
+    async update(ctx){
+        const product = await strapi.service(serviceID.product).update(ctx);
+        return handlerResponse(200,product)
+    },
+
+}));

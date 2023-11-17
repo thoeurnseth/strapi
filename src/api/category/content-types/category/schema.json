@@ -16,17 +16,22 @@
       "type": "string",
       "required": true
     },
-    "products": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::product.product",
-      "mappedBy": "categories"
+    "description": {
+      "type": "text"
     },
-    "restaurants": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::restaurant.restaurant",
-      "mappedBy": "category"
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "slug": {
+      "type": "string"
     }
   }
 }

@@ -17,12 +17,6 @@
     },
     "description": {
       "type": "text"
-    },
-    "category": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::category.category",
-      "inversedBy": "restaurants"
     }
   }
 }

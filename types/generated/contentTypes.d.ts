@@ -690,16 +690,9 @@ export interface ApiCategoryCategory extends Schema.CollectionType {
   };
   attributes: {
     title: Attribute.String & Attribute.Required;
-    products: Attribute.Relation<
-      'api::category.category',
-      'manyToMany',
-      'api::product.product'
-    >;
-    restaurants: Attribute.Relation<
-      'api::category.category',
-      'oneToMany',
-      'api::restaurant.restaurant'
-    >;
+    description: Attribute.Text;
+    image: Attribute.Media;
+    slug: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -765,12 +758,12 @@ export interface ApiProductProduct extends Schema.CollectionType {
     description: Attribute.Text & Attribute.Required;
     price: Attribute.Float;
     regular_price: Attribute.Float;
-    categories: Attribute.Relation<
+    image: Attribute.Media;
+    category: Attribute.Relation<
       'api::product.product',
-      'manyToMany',
+      'oneToOne',
       'api::category.category'
     >;
-    image: Attribute.Media;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -803,11 +796,6 @@ export interface ApiRestaurantRestaurant extends Schema.CollectionType {
   attributes: {
     title: Attribute.String;
     description: Attribute.Text;
-    category: Attribute.Relation<
-      'api::restaurant.restaurant',
-      'manyToOne',
-      'api::category.category'
-    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
