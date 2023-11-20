@@ -1,6 +1,5 @@
 const serviceID = {
     restaurant:'api::restaurant.restaurant',
-    student:'api::student.student',
     category:'api::category.category',
     product:'api::product.product',
 }
@@ -22,9 +21,6 @@ const serviceID = {
 //     return schema
 // }
 
-function getStudent(){
-
-}
 
 function createCategory(title,description,resource,file,slug,currentdate){
     const schema = {
@@ -96,7 +92,6 @@ function updateProduct(title,description,price,regular_price,image,category){
 }
 
 module.exports = {
-    getStudent,
     serviceID,
     createCategory,
     updateCategory,
