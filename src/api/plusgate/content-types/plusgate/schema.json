@@ -1,0 +1,32 @@
+{
+  "kind": "singleType",
+  "collectionName": "plusgates",
+  "info": {
+    "singularName": "plusgate",
+    "pluralName": "plusgates",
+    "displayName": "Plusgate",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "privateKey": {
+      "type": "text",
+      "required": true
+    },
+    "secretKey": {
+      "type": "text",
+      "required": true
+    },
+    "sender": {
+      "type": "string",
+      "required": true
+    },
+    "content": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

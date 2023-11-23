@@ -2,6 +2,7 @@ const serviceID = {
     restaurant:'api::restaurant.restaurant',
     category:'api::category.category',
     product:'api::product.product',
+    plusgate:'api::plusgate.plusgate',
 }
 
 // function getStoryteacher(){
