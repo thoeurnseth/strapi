@@ -44,5 +44,15 @@ module.exports = createCoreService('api::restaurant.restaurant',({strapi}) =>({
             return handlerError('EXEPTION ERROR',error)
         }
     },
+
+
+    async beforeDelete(event) {
+        console.log(111111);
+        const id = event.params.where.id;
+        console.log(id,'11111111111111');
+        const item = await strapi.entityService.findOne(serviceID.restaurant, id, {
+            populate: { localizations: true },
+        });
+    },
     
 }));

@@ -216,4 +216,9 @@ module.exports = createCoreController('api::category.category',({strapi}) => ({
         const category = await strapi.service(serviceID.category).update(ctx);
         return handlerResponse(200,category)
     },
+
+    async delete(ctx){
+        const category = await strapi.service(serviceID.category).delete(ctx);
+        return handlerResponse(200,category)
+    },
 }));

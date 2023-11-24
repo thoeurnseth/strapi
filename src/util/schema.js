@@ -22,6 +22,14 @@ const serviceID = {
 //     return schema
 // }
 
+function getCategory(){
+    const schema = {
+        filters:{
+            publishedAt:{"$ne":null}
+        },
+    }
+    return schema;
+}
 
 function createCategory(title,description,resource,file,slug,currentdate){
     const schema = {
@@ -50,8 +58,20 @@ function updateCategory(title,description,resource,file,slug){
     return schema
 }
 
+function toTrash(){
+    const schema = {
+        data:{
+            publishedAt: null
+        }
+    }
+    return schema
+}
+
 function getProduct(){
     const schema = {
+        filters:{
+            publishedAt:{"$ne":null}
+        },
         sort: { createdAt: 'DESC' },
         fields: ["id", "title","description","price","regular_price",],
         populate:{
@@ -98,5 +118,7 @@ module.exports = {
     updateCategory,
     getProduct,
     createProduct,
-    updateProduct
+    updateProduct,
+    toTrash,
+    getCategory
 } 

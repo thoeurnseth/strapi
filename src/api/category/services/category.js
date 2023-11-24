@@ -4,6 +4,7 @@ const   {serviceID}      = require('../../../util/schema');
 const   {getCategory}     = require('../../../util/schema');
 const   {createCategory} = require('../../../util/schema');
 const   {updateCategory} = require('../../../util/schema');
+const   {toTrash} = require('../../../util/schema');
 
 /**
  * category service
@@ -14,7 +15,7 @@ const { createCoreService } = require('@strapi/strapi').factories;
 module.exports = createCoreService('api::category.category',({strapi}) =>({
     async find(ctx){
         try{
-            const category = await strapi.entityService.findMany(serviceID.category);
+            const category = await strapi.entityService.findMany(serviceID.category,getCategory());
             return category;
         }catch(error){
             return handlerError('EXEPTION ERROR',error)
@@ -41,6 +42,16 @@ module.exports = createCoreService('api::category.category',({strapi}) =>({
         const {id,title,description,resource,file,slug} = ctx.request.body
         try{
             const stories = await strapi.entityService.update(serviceID.category,id,updateCategory(title,description,resource,file,slug));
+            return stories
+        }catch(error){
+            return handlerError('EXEPTION ERROR',error)
+        }
+    },
+    
+    async delete(ctx){
+        const id = ctx.params.id;
+        try{
+            const stories = await strapi.entityService.update(serviceID.category,id,toTrash());
             return stories
         }catch(error){
             return handlerError('EXEPTION ERROR',error)
