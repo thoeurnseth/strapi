@@ -79,6 +79,12 @@
     "phone": {
       "type": "biginteger",
       "required": true
+    },
+    "userCode": {
+      "type": "string"
+    },
+    "inviteCode": {
+      "type": "string"
     }
   }
 }

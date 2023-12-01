@@ -69,6 +69,7 @@ module.exports = (plugin) => {
             });
         }
 
+        // google
         // Connect the user with a third-party provider.
         try {
             const user = await getService('providers').connect(provider, ctx.query);

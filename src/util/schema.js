@@ -3,6 +3,8 @@ const serviceID = {
     category:'api::category.category',
     product:'api::product.product',
     plusgate:'api::plusgate.plusgate',
+    carts:'api::cart.cart',
+    cartItemt:'api::cart-item.cart-item',
 }
 
 // function getStoryteacher(){
@@ -112,6 +114,45 @@ function updateProduct(title,description,price,regular_price,image,category){
     return schema;
 }
 
+function getCart(userId){
+    const schema = {
+        filters:{
+            users_permissions_user:{id:{"$eq":userId}},
+        },
+        populate:{
+            users_permissions_user:{fields:['username','email']},
+            products:{fields:['title','description']}
+        }
+    }
+    return schema;
+}
+
+function createCart(userId,currentdate){
+    const schema = {
+        data: {
+            publishedAt:currentdate,
+            users_permissions_user:{connect:[userId]},
+        },
+    }
+    return schema;
+}
+
+function getCartItemt(){
+
+}
+
+function createCartItemt(cart,product,qty,currentdate){
+    const schema = {
+        data: {
+            qty:qty,
+            cart:{connect:[cart]},
+            product:{connect:[product]},
+            publishedAt:currentdate,
+        },
+    }
+    return schema;
+}
+
 module.exports = {
     serviceID,
     createCategory,
@@ -120,5 +161,9 @@ module.exports = {
     createProduct,
     updateProduct,
     toTrash,
-    getCategory
+    getCategory,
+    getCart,
+    createCart,
+    getCartItemt,
+    createCartItemt,
 } 
