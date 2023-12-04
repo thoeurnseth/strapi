@@ -153,6 +153,15 @@ function createCartItemt(cart,product,qty,currentdate){
     return schema;
 }
 
+function updateCartItemt(qty){
+    const schema = {
+        data: {
+            qty:qty,
+        },
+    }
+    return schema;
+}
+
 module.exports = {
     serviceID,
     createCategory,
@@ -166,4 +175,5 @@ module.exports = {
     createCart,
     getCartItemt,
     createCartItemt,
+    updateCartItemt,
 } 

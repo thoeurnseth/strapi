@@ -1,7 +1,7 @@
 'use strict';
 const   {serviceID}         = require('../../../util/schema');
 const   {handlerError}      = require('../../../util/handler');
-const   {getCart,createCart}           = require('../../../util/schema');
+const   {getCart,createCart,createCartItemt,updateCartItemt} = require('../../../util/schema');
 /**
  * cart service
  */
@@ -22,7 +22,8 @@ module.exports = createCoreService('api::cart.cart',({strapi})=>({
     async create(ctx){
         const { user } = ctx.state;
         try{
-            let productId = JSON.parse(ctx.request.body.productId); //covert string to array
+            const {products} = ctx.request.body
+            // let productId = JSON.parse(ctx.request.body.products); //covert string to array
             let currentdate = new Date();
             const find = await strapi.entityService.findMany(serviceID.carts,
                 {
@@ -31,13 +32,19 @@ module.exports = createCoreService('api::cart.cart',({strapi})=>({
                     },
                 }
             )
+            let cardId = find[0].id;
             const count = find.length;
             if(count == 1){
-                const cart = await strapi.entityService.update(serviceID.carts,find[0].id,createCart(user.id,currentdate));
-                return cart; 
+                for (const item of products) {
+                    const cartsitem = await strapi.entityService.update(serviceID.cartItemt,cardId,updateCartItemt(item.qty));
+                }
             } else{
                 const carts = await strapi.entityService.create(serviceID.carts,createCart(user.id,currentdate));
-                return carts
+                for (const item of products) {
+                    const cartsitem = await strapi.entityService.create(serviceID.cartItemt,createCartItemt(carts.id,item.id,item.qty,currentdate));
+                }
+                return carts;
+                
             }
 
         }catch(error){
