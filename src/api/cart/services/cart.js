@@ -35,9 +35,49 @@ module.exports = createCoreService('api::cart.cart',({strapi})=>({
             let cardId = find[0].id;
             const count = find.length;
             if(count == 1){
-                for (const item of products) {
-                    const cartsitem = await strapi.entityService.update(serviceID.cartItemt,cardId,updateCartItemt(item.qty));
+                let a = products.map(async (obj, i) => {
+                    const findid = await strapi.entityService.findMany(serviceID.cartItemt,
+                        {
+                            filters:{
+                                $and: [
+                                    { cart:{id:{"$eq":cardId}}},
+                                    { product: { id:{"$eq":obj.id}}},
+                                ]
+                            },
+                        }
+                    )
+                    let id = findid[0].id;
+                    const cartsitem = await strapi.entityService.update(serviceID.cartItemt,id,updateCartItemt(obj.qty));
+                });
+                if(a){
+                    return "update success";
                 }
+
+                for (const item of products) {
+                    let param = {
+                        product:item.id,
+                        // cart:cardId
+                    }
+
+                 
+                    // const findid = await strapi.entityService.findMany(serviceID.cartItemt,
+                    //     {
+                    //         filters:{
+                    //             $and: [
+                    //                 { cart:{id:{"$eq":cardId}}},
+                    //                 { product: { id:{"$eq":item.id}}},
+                    //             ]
+                    //         },
+                    //     }
+                    // )
+                    // let id = findid[0].id;
+                    // console.log(id,'111111');
+                    // const cartsitem = await strapi.entityService.update(serviceID.cartItemt,id,updateCartItemt(item.qty));
+                    // if(cartsitem){
+                    //     return "update success";
+                    // }
+                }
+               
             } else{
                 const carts = await strapi.entityService.create(serviceID.carts,createCart(user.id,currentdate));
                 for (const item of products) {
