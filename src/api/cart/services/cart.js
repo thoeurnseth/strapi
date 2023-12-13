@@ -1,7 +1,7 @@
 'use strict';
 const   {serviceID}         = require('../../../util/schema');
 const   {handlerError}      = require('../../../util/handler');
-const   {getCart,createCart,createCartItemt,updateCartItemt} = require('../../../util/schema');
+const   {getCart,createCart,createCartItemt,updateCartItemt,dalateCartItmems,getCartItemt} = require('../../../util/schema');
 /**
  * cart service
  */
@@ -13,7 +13,14 @@ module.exports = createCoreService('api::cart.cart',({strapi})=>({
         const { user } = ctx.state;
         try{
             const cart = await strapi.entityService.findMany(serviceID.carts,getCart(user.id));
-            return cart;
+            const count = cart.length;
+            if(count == 1){
+                let cartId = cart[0].id;
+                const cartitem = await strapi.entityService.findMany(serviceID.cartItemt,getCartItemt(cartId));
+                return cartitem;
+            } else{
+                return 'Not Data';
+            }
         }catch(error){
             return handlerError('EXEPTION ERROR',error)
         }
@@ -32,10 +39,10 @@ module.exports = createCoreService('api::cart.cart',({strapi})=>({
                     },
                 }
             )
-            let cardId = find[0].id;
             const count = find.length;
             if(count == 1){
-                let a = products.map(async (obj, i) => {
+                let cardId = find[0].id;
+                const carts =  products.map(async (obj, i) => {
                     const findid = await strapi.entityService.findMany(serviceID.cartItemt,
                         {
                             filters:{
@@ -47,46 +54,21 @@ module.exports = createCoreService('api::cart.cart',({strapi})=>({
                         }
                     )
                     let id = findid[0].id;
-                    const cartsitem = await strapi.entityService.update(serviceID.cartItemt,id,updateCartItemt(obj.qty));
-                });
-                if(a){
-                    return "update success";
-                }
-
-                for (const item of products) {
-                    let param = {
-                        product:item.id,
-                        // cart:cardId
+                    if(id){
+                        await strapi.entityService.delete(serviceID.cartItemt,id,updateCartItemt(obj.qty));
                     }
-
-                 
-                    // const findid = await strapi.entityService.findMany(serviceID.cartItemt,
-                    //     {
-                    //         filters:{
-                    //             $and: [
-                    //                 { cart:{id:{"$eq":cardId}}},
-                    //                 { product: { id:{"$eq":item.id}}},
-                    //             ]
-                    //         },
-                    //     }
-                    // )
-                    // let id = findid[0].id;
-                    // console.log(id,'111111');
-                    // const cartsitem = await strapi.entityService.update(serviceID.cartItemt,id,updateCartItemt(item.qty));
-                    // if(cartsitem){
-                    //     return "update success";
-                    // }
+                    const cartsitem = await strapi.entityService.create(serviceID.cartItemt,createCartItemt(cardId,obj.id,obj.qty,currentdate));
+                });
+                if(carts) {
+                    return 'Create Success!'
                 }
-               
             } else{
                 const carts = await strapi.entityService.create(serviceID.carts,createCart(user.id,currentdate));
                 for (const item of products) {
                     const cartsitem = await strapi.entityService.create(serviceID.cartItemt,createCartItemt(carts.id,item.id,item.qty,currentdate));
                 }
-                return carts;
-                
+                return carts; 
             }
-
         }catch(error){
             return handlerError('EXEPTION ERROR',error);
         }
@@ -94,7 +76,7 @@ module.exports = createCoreService('api::cart.cart',({strapi})=>({
 
     async delete(ctx){
         const { user } = ctx.state;
-        const id = ctx.params.id;
+        const productId = ctx.params.id;
         try{
             const find = await strapi.entityService.findMany(serviceID.carts,
                 {
@@ -107,8 +89,58 @@ module.exports = createCoreService('api::cart.cart',({strapi})=>({
                     }
                 }
             )
+            let cartId = find[0].id;
+            if(cartId && productId){
+                const find = await strapi.entityService.findMany(serviceID.cartItemt,dalateCartItmems(cartId,productId))
+                let id = find[0].id;
+                let deleteItem = await strapi.entityService.delete(serviceID.cartItemt,id);
+                return deleteItem;
+            }else{
+                return '404';
+            }
         }catch(error){
+            return handlerError('EXEPTION ERROR',error);
+        }
+    },
 
+    async update(ctx){
+        const { user } = ctx.state;
+        const {products} = ctx.request.body
+       
+        try{
+            const find = await strapi.entityService.findMany(serviceID.carts,
+                {
+                    filters:{
+                        users_permissions_user:{id:{"$eq":user.id}},
+                    },
+                    populate:{
+                        users_permissions_user:{fields:['username','email']},
+                        products:{fields:['title','description']}
+                    }
+                }
+            )
+            
+            let cartId = find[0].id;
+            const carts =  products.map(async (obj, i) => {
+                const find = await strapi.entityService.findMany(serviceID.cartItemt,
+                    {
+                        filters:{
+                            cart:{id:{"$eq":cartId}},
+                            product:{id:{"$eq": obj.id}}
+                        }
+                    }    
+                )
+                const count = find.length;
+                if(count == 1){
+                    let id = find[0].id;
+                    const cartsitem = await strapi.entityService.update(serviceID.cartItemt,id,updateCartItemt(cartId,obj.id,obj.qty));
+                }
+            })
+            if(carts){
+                return 'Update Success!'
+            }
+        }catch(error){
+            return handlerError('EXEPTION ERROR',error);
         }
     }
 }));

@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "Order",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "deliveryStatus": {
+      "type": "enumeration",
+      "enum": [
+        "Pending",
+        "Processing",
+        "Completed"
+      ]
+    },
+    "total": {
+      "type": "decimal"
+    },
+    "paymentMethod": {
+      "type": "string",
+      "maxLength": 20
+    }
+  }
+}

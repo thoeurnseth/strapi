@@ -17,6 +17,11 @@ module.exports = createCoreController('api::cart.cart',({strapi})=>({
         const cart = await strapi.service(serviceID.carts).create(ctx);
         return handlerResponse(200,cart)
     },
+
+    async update(ctx){
+        const cart = await strapi.service(serviceID.carts).update(ctx);
+        return handlerResponse(200,cart)
+    },
     
     async delete(ctx){
         const cart = await strapi.service(serviceID.carts).delete(ctx);

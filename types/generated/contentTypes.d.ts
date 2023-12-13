@@ -817,6 +817,49 @@ export interface ApiCouponCoupon extends Schema.CollectionType {
   };
 }
 
+export interface ApiOrderOrder extends Schema.CollectionType {
+  collectionName: 'orders';
+  info: {
+    singularName: 'order';
+    pluralName: 'orders';
+    displayName: 'Order';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    users_permissions_user: Attribute.Relation<
+      'api::order.order',
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+    deliveryStatus: Attribute.Enumeration<
+      ['Pending', 'Processing', 'Completed']
+    >;
+    total: Attribute.Decimal;
+    paymentMethod: Attribute.String &
+      Attribute.SetMinMaxLength<{
+        maxLength: 20;
+      }>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::order.order',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::order.order',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiPlusgatePlusgate extends Schema.SingleType {
   collectionName: 'plusgates';
   info: {
@@ -943,6 +986,7 @@ declare module '@strapi/types' {
       'api::cart-item.cart-item': ApiCartItemCartItem;
       'api::category.category': ApiCategoryCategory;
       'api::coupon.coupon': ApiCouponCoupon;
+      'api::order.order': ApiOrderOrder;
       'api::plusgate.plusgate': ApiPlusgatePlusgate;
       'api::product.product': ApiProductProduct;
       'api::restaurant.restaurant': ApiRestaurantRestaurant;

@@ -5,6 +5,7 @@ const serviceID = {
     plusgate:'api::plusgate.plusgate',
     carts:'api::cart.cart',
     cartItemt:'api::cart-item.cart-item',
+    order:'api::order.order',
 }
 
 // function getStoryteacher(){
@@ -119,9 +120,18 @@ function getCart(userId){
         filters:{
             users_permissions_user:{id:{"$eq":userId}},
         },
+    }
+    return schema;
+}
+
+function getCartItemt(cartId){
+    const schema = {
+        filters:{
+            cart: { id: cartId },
+        },
         populate:{
-            users_permissions_user:{fields:['username','email']},
-            products:{fields:['title','description']}
+            // cart: { fields:['id']},
+            product:{fields:['title','description']}
         }
     }
     return schema;
@@ -137,10 +147,6 @@ function createCart(userId,currentdate){
     return schema;
 }
 
-function getCartItemt(){
-
-}
-
 function createCartItemt(cart,product,qty,currentdate){
     const schema = {
         data: {
@@ -153,11 +159,21 @@ function createCartItemt(cart,product,qty,currentdate){
     return schema;
 }
 
-function updateCartItemt(qty){
+function updateCartItemt(cartId,prodcutId,qty){
     const schema = {
         data: {
             qty:qty,
         },
+    }
+    return schema;
+}
+
+function dalateCartItmems(cartId , prodcutId){
+    const schema = {
+        filters:{
+            cart:{id:{"$eq":cartId}},
+            product:{id:{"$eq": prodcutId}}
+        }
     }
     return schema;
 }
@@ -176,4 +192,5 @@ module.exports = {
     getCartItemt,
     createCartItemt,
     updateCartItemt,
+    dalateCartItmems
 } 
