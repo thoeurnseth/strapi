@@ -178,6 +178,19 @@ function dalateCartItmems(cartId , prodcutId){
     return schema;
 }
 
+function createOrder(paymentMethod,totalPrice,userId,deliveryStatus,currentdate){
+    const schema = {
+        data: {
+            total:totalPrice,
+            paymentMethod:paymentMethod,
+            publishedAt:currentdate,
+            deliveryStatus:deliveryStatus,
+            users_permissions_user:{connect:[userId]},
+        },
+    }
+    return schema;
+}
+
 module.exports = {
     serviceID,
     createCategory,
@@ -192,5 +205,6 @@ module.exports = {
     getCartItemt,
     createCartItemt,
     updateCartItemt,
-    dalateCartItmems
+    dalateCartItmems,
+    createOrder
 } 

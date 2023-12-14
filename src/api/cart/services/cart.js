@@ -53,10 +53,12 @@ module.exports = createCoreService('api::cart.cart',({strapi})=>({
                             },
                         }
                     )
-                    let id = findid[0].id;
-                    if(id){
+                    let count = findid.length;
+                    if(count == 1){
+                        let id = findid[0].id;
                         await strapi.entityService.delete(serviceID.cartItemt,id,updateCartItemt(obj.qty));
                     }
+
                     const cartsitem = await strapi.entityService.create(serviceID.cartItemt,createCartItemt(cardId,obj.id,obj.qty,currentdate));
                 });
                 if(carts) {
