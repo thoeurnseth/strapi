@@ -82,7 +82,32 @@ module.exports = (plugin) => {
             throw new ApplicationError(error.message);
         }
     }
- 
+
+    // save the default register controller
+    const register = plugin.controllers.auth.register
+    // extend register controller
+    plugin.controllers.auth.register = async (ctx) => {
+        let data = ctx.request.body;
+        //call register controller
+        await register(ctx)
+        // then get userId from register response 
+        const userId = ctx.response.body.user.id
+
+        // save custom data registration with update service
+        const user = await strapi.entityService.update('plugin::users-permissions.user', userId, {
+            data: {
+                email: ctx.request.body.email,
+                password: ctx.request.body.password,
+                username: ctx.request.body.username
+            },
+        });
+        const refreshToken = await issueRefreshToken({ id: user.id })
+        ctx.response.body['refreshToken'] = refreshToken
+        ctx.response.body['accessToken'] = ctx.response.body.jwt
+        delete ctx.response.body['jwt']
+        return ctx.response.body;
+    }
+
     plugin.controllers.auth['refreshToken'] = async (ctx) => {
         const store = await strapi.store({ type: 'plugin', name: 'users-permissions' });
         const { refreshToken } = ctx.request.body;

@@ -3,7 +3,7 @@ module.exports = ({ env }) => ({
         enabled: true,
         config: {
             jwt: {
-                expiresIn: '1d',
+                expiresIn: '10d',
             },
         },
     },
