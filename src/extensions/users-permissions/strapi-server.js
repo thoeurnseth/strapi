@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const {validateCallbackBody} = require('../users-permissions/controllers/validation/auth');
 const { setMaxListeners } = require('process');
+const { find } = require('../../../config/middlewares');
 const { sanitize } = utils;
 const { ApplicationError, ValidationError } = utils.errors;
 const sanitizeUser = (user, ctx) => {
@@ -88,19 +89,36 @@ module.exports = (plugin) => {
     // extend register controller
     plugin.controllers.auth.register = async (ctx) => {
         let data = ctx.request.body;
+        let inviteCode  = data.inviteCode;
         //call register controller
         await register(ctx)
         // then get userId from register response 
         const userId = ctx.response.body.user.id
-
+        let userCode = 'Z'+userId+Math.floor(Math.random() * 99999)+'E';
         // save custom data registration with update service
         const user = await strapi.entityService.update('plugin::users-permissions.user', userId, {
             data: {
                 email: ctx.request.body.email,
                 password: ctx.request.body.password,
-                username: ctx.request.body.username
+                username: ctx.request.body.username,
+                userCode:userCode,
             },
         });
+       
+        if(inviteCode){
+             // find user invite code
+            const findManyuser = await strapi.entityService.findMany('plugin::users-permissions.user',{
+                filters:{
+                    userCode:{"$eq":inviteCode}
+                },
+            });
+            if(findManyuser.length == 1){
+
+            }else{
+
+            }
+        }
+
         const refreshToken = await issueRefreshToken({ id: user.id })
         ctx.response.body['refreshToken'] = refreshToken
         ctx.response.body['accessToken'] = ctx.response.body.jwt
