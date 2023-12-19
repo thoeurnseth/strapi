@@ -5,6 +5,7 @@ const _ = require('lodash');
 const {validateCallbackBody} = require('../users-permissions/controllers/validation/auth');
 const { setMaxListeners } = require('process');
 const { find } = require('../../../config/middlewares');
+const {createCoupon} = require('../../../src/util/schema')
 const { sanitize } = utils;
 const { ApplicationError, ValidationError } = utils.errors;
 const sanitizeUser = (user, ctx) => {
@@ -93,7 +94,8 @@ module.exports = (plugin) => {
         //call register controller
         await register(ctx)
         // then get userId from register response 
-        const userId = ctx.response.body.user.id
+        const userId  = ctx.response.body.user.id
+        let userEmail = ctx.response.body.user.email;
         let userCode = 'Z'+userId+Math.floor(Math.random() * 99999)+'E';
         // save custom data registration with update service
         const user = await strapi.entityService.update('plugin::users-permissions.user', userId, {
@@ -113,9 +115,21 @@ module.exports = (plugin) => {
                 },
             });
             if(findManyuser.length == 1){
+                let currentdate = new Date();
+                let inviteuserId = findManyuser[0].id;
+                let email = findManyuser[0].email.slice(0, 4);
+                let couponInvite      =  email+inviteuserId+Math.floor(Math.random() * 99999)+'Z';
+                let descriptionInvite =  email+inviteuserId+Math.floor(Math.random() * 99999)+'forInvite';
+                let amountInvite      =  '2';
 
-            }else{
+                let couponOwner      =  userEmail.slice(0, 4)+userId+Math.floor(Math.random() * 99999)+'Z';
+                let descriptionOwner =  userEmail.slice(0, 4)+userId+Math.floor(Math.random() * 99999)+'forUser';
+                let amountOwner      =  '5';
+                // create coupon for user invite
+                const createCouponInvite = await strapi.entityService.create('api::coupon.coupon',createCoupon(couponInvite,descriptionInvite,amountInvite,currentdate));
 
+                // create coupon for user owner
+                const createCouponOwner = await strapi.entityService.create('api::coupon.coupon',createCoupon(couponOwner,descriptionOwner,amountOwner,currentdate));
             }
         }
 

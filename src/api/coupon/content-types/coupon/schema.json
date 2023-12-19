@@ -15,13 +15,10 @@
     "code": {
       "type": "string"
     },
-    "CouponType": {
+    "couponAmount": {
       "type": "string"
     },
-    "CouponAmount": {
-      "type": "string"
-    },
-    "Description": {
+    "description": {
       "type": "string"
     },
     "usageLimit": {
@@ -29,6 +26,13 @@
     },
     "expiryDate": {
       "type": "datetime"
+    },
+    "couponType": {
+      "type": "enumeration",
+      "enum": [
+        "Percentage discount",
+        "Fixed cart discount"
+      ]
     }
   }
 }

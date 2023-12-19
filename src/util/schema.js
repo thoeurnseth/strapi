@@ -191,6 +191,20 @@ function createOrder(paymentMethod,totalPrice,userId,deliveryStatus,currentdate)
     return schema;
 }
 
+function createCoupon(couponOwner,descriptionOwner,couponAmount,currentdate){
+    const schema = {
+        data: {
+            code:couponOwner,
+            description:descriptionOwner,
+            couponAmount:couponAmount,
+            usageLimit:'1',
+            couponType:'Percentage discount',
+            publishedAt:currentdate,
+        },
+    }
+    return schema;
+}
+
 module.exports = {
     serviceID,
     createCategory,
@@ -206,5 +220,6 @@ module.exports = {
     createCartItemt,
     updateCartItemt,
     dalateCartItmems,
-    createOrder
+    createOrder,
+    createCoupon,
 } 
